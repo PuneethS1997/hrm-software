@@ -39,7 +39,9 @@ class DashboardController {
         $data = [
           'attendance' => $dash->myAttendance($_SESSION['user']['id']),
           'leaves' => $dash->myLeaves($_SESSION['user']['id']),
-          'payroll' => $dash->myPayroll($_SESSION['user']['id'])
+          'payroll' => $dash->myPayroll($_SESSION['user']['id']),
+          'summary'  => $dash->getLeaveSummary($_SESSION['user']['id'])
+
         ];
         require '../app/views/dashboard/employee.php';
         break;

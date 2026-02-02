@@ -159,9 +159,44 @@ class Leave extends Database {
           throw new Exception('Insufficient leave balance');
       }
   }
-    
-
-
+  public function hasSufficientBalance($leaveId) {
+    $stmt = $this->db->prepare("
+      SELECT l.total_days, b.balance
+      FROM leaves l
+      JOIN leave_balances b 
+        ON b.user_id = l.user_id 
+       AND b.leave_type_id = l.leave_type_id
+      WHERE l.id = ?
+    ");
+    $stmt->execute([$leaveId]);
+    $row = $stmt->fetch();
+  
+    return $row && $row['balance'] >= $row['total_days'];
+  }
+  
+  public function rollbackBalance($leaveId) {
+    $stmt = $this->db->prepare("
+      UPDATE leave_balances b
+      JOIN leaves l ON l.leave_type_id = b.leave_type_id
+      SET b.balance = b.balance + l.total_days
+      WHERE l.id = ? AND b.user_id = l.user_id
+    ");
+    $stmt->execute([$leaveId]);
+  }
+  
+  public function getLeaveSummary($userId) {
+    $stmt = $this->db->prepare("
+      SELECT
+        SUM(CASE WHEN status='approved' THEN total_days ELSE 0 END) as used,
+        SUM(balance) as balance
+      FROM leaves l
+      JOIN leave_balances b ON b.user_id = l.user_id
+      WHERE l.user_id = ?
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetch();
+  }
+  
   public function calendarData($userId) {
     $stmt = $this->db->prepare("
       SELECT start_date AS start,

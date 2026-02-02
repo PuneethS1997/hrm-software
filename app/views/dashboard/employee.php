@@ -38,6 +38,17 @@
                 </div>
             </div>
 
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-semibold">Leave Summary</h6>
+                    <div class="small text-muted">
+                    Used: <strong><?= $summary['used'] ?></strong> |
+                    Balance: <strong><?= $summary['balance'] ?></strong>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="col-md-4">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">

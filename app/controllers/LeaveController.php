@@ -82,9 +82,21 @@ class LeaveController {
               $_SESSION['user']['id']      // admin user id
           );
       }
-  
-      header('Location: /crm-hrms/public/leaves/admin');
-      exit;
+
+      $leave = new Leave();
+
+      if ($_POST['status'] === 'approved') {
+        if (!$leave->hasSufficientBalance($_POST['id'])) {
+          $_SESSION['error'] = 'Insufficient leave balance';
+          header('Location: /crm-hrms/public/leaves/admin');
+          exit;
+        }
+      }
+      if ($_POST['status'] === 'rejected') {
+        $leave->rollbackBalance($_POST['id']);
+      }
+      
+     
   }
   
 
@@ -125,6 +137,9 @@ class LeaveController {
   
     echo json_encode(['success' => true]);
   }
+
+
+
 
   public function calendar() {
     AuthMiddleware::handle();
