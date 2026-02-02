@@ -57,9 +57,7 @@
   </table>
 </div>
 
-new FullCalendar.Calendar(calendarEl, {
-  events: '/leave/calendar'
-}).render();
+
 
 <div id="toast" class="toast-msg"></div>
 
@@ -114,13 +112,13 @@ new FullCalendar.Calendar(calendarEl, {
       <button class="btn btn-success">Apply</button>
     </form>
 
-    <div id="leaveWarning" class="alert alert-warning d-none"></div>
+      <div id="leaveWarning" class="alert alert-warning d-none"></div>
 
 
-    <div class="alert alert-info py-2 d-none" id="leaveBalanceBox"></div>
-<div class="alert alert-danger py-2 d-none" id="leaveError"></div>
+      <div class="alert alert-info py-2 d-none" id="leaveBalanceBox"></div>
+      <div class="alert alert-danger py-2 d-none" id="leaveError"></div>
 
-<input type="hidden" name="total_days" id="totalDays">
+      <input type="hidden" name="total_days" id="totalDays">
 
   </div>
 </div>

@@ -189,6 +189,8 @@ switch ($route) {
           case '/leaves/history':
             (new LeaveController())->history();
             break;
+
+            
           
           case '/leaves/admin':
             (new LeaveController())->admin();

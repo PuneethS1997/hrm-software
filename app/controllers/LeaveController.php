@@ -69,21 +69,24 @@ class LeaveController {
     require '../app/views/leaves/admin_list.php';
   }
 
-  public function action() {
-    AuthMiddleware::handle();
-    RoleMiddleware::allow(['admin','super_admin']);
-
-    if ($_POST) {
-      (new Leave())->updateStatus(
-        $_POST['id'],
-        $_POST['status'],
-        $_SESSION['user']['id'],
-        $_POST['remark']
-      );
-    }
-
-    header('Location: /crm-hrms/public/leaves/admin');
+  public function action()
+  {
+      AuthMiddleware::handle();
+      RoleMiddleware::allow(['admin','super_admin']);
+  
+      if ($_POST) {
+          (new Leave())->updateStatus(
+              $_POST['id'],                // leave id
+              $_POST['status'],            // approved / rejected
+              $_POST['remark'] ?? null,    // admin remark
+              $_SESSION['user']['id']      // admin user id
+          );
+      }
+  
+      header('Location: /crm-hrms/public/leaves/admin');
+      exit;
   }
+  
 
   public function balance() {
     AuthMiddleware::handle();

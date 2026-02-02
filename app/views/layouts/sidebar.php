@@ -52,6 +52,13 @@ $role = $user['role'] ?? '';
       </li>
 
       <li>
+        <a href="<?= BASE_URL ?>/leaves/admin">
+          <i class="bi bi-calendar-check"></i>
+          <span>Leaves </span>
+        </a>
+      </li>
+
+      <li>
         <a href="#">
           <i class="bi bi-cash-stack"></i>
           <span>Payroll</span>

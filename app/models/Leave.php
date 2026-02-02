@@ -95,17 +95,72 @@ class Leave extends Database {
     ")->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public function updateStatus($id, $status, $remark, $adminId) {
-    $stmt = $this->db->prepare("
-      UPDATE leaves SET
-        status=?,
-        admin_remark=?,
-        approved_by=?,
-        approved_at=NOW()
-      WHERE id=?
-    ");
-    return $stmt->execute([$status, $remark, $adminId, $id]);
+  public function updateStatus($id, $status, $remark, $adminId)
+  {
+      $this->db->beginTransaction();
+  
+      try {
+          // 1. Update leave status
+          $stmt = $this->db->prepare("
+              UPDATE leaves SET
+                status = ?,
+                admin_remark = ?,
+                approved_by = ?,
+                approved_at = NOW()
+              WHERE id = ?
+          ");
+          $stmt->execute([$status, $remark, $adminId, $id]);
+  
+          // 2. Deduct balance ONLY if approved
+          if ($status === 'approved') {
+              $this->deductLeaveBalance($id);
+          }
+  
+          $this->db->commit();
+          return true;
+  
+      } catch (Exception $e) {
+          $this->db->rollBack();
+          throw $e;
+      }
   }
+  private function deductLeaveBalance($leaveId)
+  {
+      // Get leave info
+      $stmt = $this->db->prepare("
+          SELECT user_id, leave_type_id, total_days
+          FROM leaves
+          WHERE id = ?
+      ");
+      $stmt->execute([$leaveId]);
+      $leave = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+      if (!$leave) {
+          throw new Exception('Leave not found');
+      }
+  
+      // Deduct balance
+      $stmt = $this->db->prepare("
+          UPDATE leave_balances
+          SET balance = balance - ?
+          WHERE user_id = ?
+            AND leave_type_id = ?
+            AND balance >= ?
+      ");
+      $stmt->execute([
+          $leave['total_days'],
+          $leave['user_id'],
+          $leave['leave_type_id'],
+          $leave['total_days']
+      ]);
+  
+      // Safety check (no negative balance)
+      if ($stmt->rowCount() === 0) {
+          throw new Exception('Insufficient leave balance');
+      }
+  }
+    
+
 
   public function calendarData($userId) {
     $stmt = $this->db->prepare("
