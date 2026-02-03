@@ -68,7 +68,7 @@
 
   <div class="offcanvas-body">
 
-    <form id="leaveForm" method="POST" action="<?= BASE_URL ?>/leave/apply">
+  <form id="leaveForm">
 
       <div class="mb-3">
         <label class="form-label">Leave Type</label>
@@ -114,6 +114,22 @@
   </div>
 </div>
 
+
+<div id="toast"
+     class="position-fixed bottom-0 end-0 p-3"
+     style="z-index: 9999; display:none;">
+  <div class="toast align-items-center text-bg-success border-0 show">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Leave applied successfully
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              onclick="hideToast()"></button>
+    </div>
+  </div>
+</div>
+
 <script>
 function calcDays() {
   const s = new Date(document.getElementById('start').value);
@@ -154,5 +170,54 @@ document.getElementById('start').onchange = calcDays;
 document.getElementById('end').onchange = calcDays;
 document.getElementById('leaveType').onchange = validateBalance;
 </script>
+
+<script>
+document.getElementById('leaveForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // 🚫 stop page reload
+
+  const form = this;
+  const formData = new FormData(form);
+
+  fetch("<?= BASE_URL ?>/leaves/apply", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showToast();
+
+      // reset form
+      form.reset();
+      document.getElementById('days').value = '';
+
+      // close offcanvas after 1s
+      setTimeout(() => {
+        const canvas = bootstrap.Offcanvas.getInstance(
+          document.getElementById('applyLeaveCanvas')
+        );
+        canvas.hide();
+      }, 1000);
+
+      // reload page to refresh history (optional)
+      setTimeout(() => location.reload(), 1500);
+    }
+  })
+  .catch(err => {
+    alert("Something went wrong");
+    console.error(err);
+  });
+});
+
+function showToast() {
+  document.getElementById('toast').style.display = 'block';
+}
+
+function hideToast() {
+  document.getElementById('toast').style.display = 'none';
+}
+</script>
+
+
 
 <?php require '../app/views/layouts/footer.php'; ?>
