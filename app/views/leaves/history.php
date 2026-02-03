@@ -115,20 +115,8 @@
 </div>
 
 
-<div id="toast"
-     class="position-fixed bottom-0 end-0 p-3"
-     style="z-index: 9999; display:none;">
-  <div class="toast align-items-center text-bg-success border-0 show">
-    <div class="d-flex">
-      <div class="toast-body">
-        ✅ Leave applied successfully
-      </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              onclick="hideToast()"></button>
-    </div>
-  </div>
-</div>
+<div id="toast" class="toast-msg"></div>
+
 
 <script>
 function calcDays() {
@@ -172,51 +160,54 @@ document.getElementById('leaveType').onchange = validateBalance;
 </script>
 
 <script>
-document.getElementById('leaveForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // 🚫 stop page reload
+document.addEventListener('DOMContentLoaded', () => {
 
-  const form = this;
-  const formData = new FormData(form);
+  const form = document.getElementById('leaveForm');
+  if (!form) {
+    console.error('leaveForm not found');
+    return;
+  }
 
-  fetch("<?= BASE_URL ?>/leaves/apply", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      showToast();
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-      // reset form
-      form.reset();
-      document.getElementById('days').value = '';
+    const formData = new FormData(form);
 
-      // close offcanvas after 1s
-      setTimeout(() => {
-        const canvas = bootstrap.Offcanvas.getInstance(
-          document.getElementById('applyLeaveCanvas')
-        );
-        canvas.hide();
-      }, 1000);
+    fetch("<?= BASE_URL ?>/leaves/apply", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data); // DEBUG
 
-      // reload page to refresh history (optional)
-      setTimeout(() => location.reload(), 1500);
-    }
-  })
-  .catch(err => {
-    alert("Something went wrong");
-    console.error(err);
+      if (data.success) {
+        // alert('toast function about to run');
+
+        showToast('Leave applied successfully ✅', 'success');
+
+        form.reset();
+        document.getElementById('days').value = '';
+
+        // close offcanvas
+        const canvasEl = document.getElementById('applyLeaveCanvas');
+        const canvas = bootstrap.Offcanvas.getInstance(canvasEl);
+        if (canvas) canvas.hide();
+
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        showToast(data.message || 'Something went wrong', 'error');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      showToast('Server error', 'error');
+    });
   });
+
 });
-
-function showToast() {
-  document.getElementById('toast').style.display = 'block';
-}
-
-function hideToast() {
-  document.getElementById('toast').style.display = 'none';
-}
 </script>
+
 
 
 

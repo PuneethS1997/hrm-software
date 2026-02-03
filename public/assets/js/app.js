@@ -535,19 +535,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // leave modules
-function showToast(message, type = 'success') {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.className = 'toast show';
+// function showToast(message, type = 'success') {
+//   const toast = document.getElementById('toast');
+//   toast.textContent = message;
+//   toast.className = 'toast show';
 
-  if (type === 'error') {
-    toast.classList.add('error');
-  }
+//   if (type === 'error') {
+//     toast.classList.add('error');
+//   }
 
-  setTimeout(() => {
-    toast.className = 'toast';
-  }, 3000);
-}
+//   setTimeout(() => {
+//     toast.className = 'toast';
+//   }, 3000);
+// }
 
 
 document.addEventListener('DOMContentLoaded', function () {
