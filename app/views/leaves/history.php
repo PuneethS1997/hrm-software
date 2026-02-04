@@ -35,8 +35,7 @@
         <div id="employeeCalendar"></div>
         </div>
         </div>
-<h6 class="mt-4">🔥 Leave Timeline</h6>
-<div id="leaveTimeline"></div>
+
 
 
       <!-- Leave Summary -->
@@ -312,38 +311,7 @@ window.empCalendarLoaded=true;
 });
 </script>
 
-<script>
-fetch('<?= BASE_URL ?>/leave/timeline')
-.then(res=>res.json())
-.then(data=>{
 
-let html='';
-
-data.forEach(l=>{
-
-let color='warning';
-if(l.status=='approved') color='success';
-if(l.status=='rejected') color='danger';
-
-html+=`
-<div class="card mb-2 border-${color}">
-<div class="card-body p-2">
-<b>${l.leave_type}</b>
-<br>
-${l.start_date} → ${l.end_date}
-<br>
-<span class="badge bg-${color}">
-${l.status}
-</span>
-</div>
-</div>
-`;
-});
-
-document.getElementById('leaveTimeline').innerHTML=html;
-
-});
-</script>
 
 
 <?php require '../app/views/layouts/footer.php'; ?>

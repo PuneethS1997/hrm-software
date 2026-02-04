@@ -9,6 +9,63 @@
       data-bs-target="#adminCalendarCanvas">
       📅 Leave Calendar View
       </button>
+      <button class="btn btn-dark"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#leavePolicyCanvas">
+          Manage Leave Types
+      </button>
+
+      <div class="offcanvas offcanvas-end"
+     tabindex="-1"
+     id="leavePolicyCanvas"
+     style="width:500px">
+
+    <div class="offcanvas-header">
+        <h5>Leave Types & Policy</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <form id="leaveTypeForm">
+
+            <div class="mb-3">
+                <label>Leave Name</label>
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label>Max Days Per Year</label>
+                <input type="number"
+                       name="max_days"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label>Carry Forward</label>
+                <select name="carry_forward"
+                        class="form-control">
+                    <option value="1">Allowed</option>
+                    <option value="0">Not Allowed</option>
+                </select>
+            </div>
+
+            <button class="btn btn-success w-100">
+                Save Policy
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
 
       <div class="offcanvas offcanvas-end" id="adminCalendarCanvas">
         <div class="offcanvas-header">
@@ -83,8 +140,7 @@
         </tbody>
       </table>
     </div>
-    <h6 class="mt-3">🔥 Leave Analytics Heatmap</h6>
-        <div id="leaveHeatmap"></div>
+ 
   </div>
 </div>
 
@@ -114,29 +170,29 @@ calendar.render();
 window.adminCalendarLoaded=true;
 });
 </script>
+
 <script>
-fetch('<?= BASE_URL ?>/leave/heatmap')
-.then(res=>res.json())
-.then(data=>{
+document.getElementById('leaveTypeForm')
+.addEventListener('submit', function(e){
 
-const series = [{
-name:'Leaves',
-data:data.map(d=>({
-x:d.start_date,
-y:parseInt(d.total)
-}))
-}];
+    e.preventDefault();
 
-new ApexCharts(
-document.querySelector("#leaveHeatmap"),
-{
-chart:{type:'heatmap',height:250},
-dataLabels:{enabled:false},
-colors:["#0d6efd"],
-series:series
-}).render();
+    fetch("<?= BASE_URL ?>/leave/storeLeaveType", {
+        method: 'POST',
+        body: new FormData(this)
+    })
+    .then(response => response.json())
+    .then(() => {
+        alert('Policy Saved');
+        location.reload();
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Something went wrong');
+    });
 
 });
 </script>
+
 
 <?php require '../app/views/layouts/footer.php'; ?>

@@ -155,26 +155,25 @@ class LeaveController
     }
 }
 
-public function heatmap()
+public function storeLeaveType()
 {
-    AuthMiddleware::handle();
-    RoleMiddleware::allow(['admin','super_admin']);
+    $model = new LeaveModel();
 
-    echo json_encode(
-        (new Leave())->getLeaveHeatmapData()
+    $model->storeLeaveType(
+        $_POST['name'],
+        $_POST['max_days'],
+        $_POST['carry_forward']
     );
+
+    echo json_encode(['status' => true]);
 }
 
-public function timeline()
+public function listLeaveTypes()
 {
-    AuthMiddleware::handle();
-
-    echo json_encode(
-        (new Leave())->getLeaveTimeline(
-            $_SESSION['user']['id']
-        )
-    );
+    $model = new LeaveModel();
+    echo json_encode($model->getLeaveTypes());
 }
+
 
 
 
