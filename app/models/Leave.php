@@ -268,6 +268,31 @@ class Leave extends Database
 }
 
 
+public function getLeaveHeatmapData()
+{
+    $stmt = $this->db->query("
+        SELECT start_date, COUNT(*) as total
+        FROM leaves
+        WHERE status='approved'
+        GROUP BY start_date
+    ");
 
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getLeaveTimeline($userId)
+{
+    $stmt = $this->db->prepare("
+        SELECT l.*, lt.name AS leave_type
+        FROM leaves l
+        JOIN leave_types lt ON lt.id=l.leave_type_id
+        WHERE l.user_id=?
+        ORDER BY l.start_date DESC
+    ");
+
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 }

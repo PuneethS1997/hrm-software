@@ -208,8 +208,14 @@ switch ($route) {
                     (new LeaveController())->enterpriseCalendar();
                     break;
 
+                    case '/leave/timeline ':
+                        (new LeaveController())->timeline();
+                        break;
 
-                
+                        case '/leave/heatmap ':
+                            (new LeaveController())->heatmap();
+                            break;            
+                    
               
 
     /* ========= 404 ========= */

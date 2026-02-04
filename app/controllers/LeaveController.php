@@ -155,4 +155,27 @@ class LeaveController
     }
 }
 
+public function heatmap()
+{
+    AuthMiddleware::handle();
+    RoleMiddleware::allow(['admin','super_admin']);
+
+    echo json_encode(
+        (new Leave())->getLeaveHeatmapData()
+    );
+}
+
+public function timeline()
+{
+    AuthMiddleware::handle();
+
+    echo json_encode(
+        (new Leave())->getLeaveTimeline(
+            $_SESSION['user']['id']
+        )
+    );
+}
+
+
+
 }

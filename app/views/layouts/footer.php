@@ -15,6 +15,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- heatmap -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <!-- Custom JS -->
      <script src="<?= BASE_URL ?>/assets/js/toast.js"></script>
      <script src="<?= BASE_URL ?>/assets/js/attendance.js"></script>

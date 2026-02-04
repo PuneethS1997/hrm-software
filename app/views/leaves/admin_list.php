@@ -7,7 +7,7 @@
   <button class="btn btn-dark mb-3"
       data-bs-toggle="offcanvas"
       data-bs-target="#adminCalendarCanvas">
-      📅 Leave Calendar
+      📅 Leave Calendar View
       </button>
 
       <div class="offcanvas offcanvas-end" id="adminCalendarCanvas">
@@ -17,6 +17,8 @@
         </div>
 
         <div class="offcanvas-body">
+      
+
         <div id="adminCalendar"></div>
         </div>
         </div>
@@ -81,7 +83,8 @@
         </tbody>
       </table>
     </div>
-
+    <h6 class="mt-3">🔥 Leave Analytics Heatmap</h6>
+        <div id="leaveHeatmap"></div>
   </div>
 </div>
 
@@ -111,6 +114,29 @@ calendar.render();
 window.adminCalendarLoaded=true;
 });
 </script>
+<script>
+fetch('<?= BASE_URL ?>/leave/heatmap')
+.then(res=>res.json())
+.then(data=>{
 
+const series = [{
+name:'Leaves',
+data:data.map(d=>({
+x:d.start_date,
+y:parseInt(d.total)
+}))
+}];
+
+new ApexCharts(
+document.querySelector("#leaveHeatmap"),
+{
+chart:{type:'heatmap',height:250},
+dataLabels:{enabled:false},
+colors:["#0d6efd"],
+series:series
+}).render();
+
+});
+</script>
 
 <?php require '../app/views/layouts/footer.php'; ?>
