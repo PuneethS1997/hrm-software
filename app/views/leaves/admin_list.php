@@ -4,6 +4,23 @@
 <div id="main-content" class="main-content">
   <div class="content-wrapper container-fluid">
 
+  <button class="btn btn-dark mb-3"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#adminCalendarCanvas">
+      📅 Leave Calendar
+      </button>
+
+      <div class="offcanvas offcanvas-end" id="adminCalendarCanvas">
+        <div class="offcanvas-header">
+        <h5>Company Leave Calendar</h5>
+        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+        <div id="adminCalendar"></div>
+        </div>
+        </div>
+
     <div class="container mt-4">
       <h4>Pending Leave Requests</h4>
 
@@ -67,5 +84,33 @@
 
   </div>
 </div>
+
+<script>
+document.getElementById('adminCalendarCanvas')
+.addEventListener('shown.bs.offcanvas', function () {
+
+if(window.adminCalendarLoaded) return;
+
+const calendar = new FullCalendar.Calendar(
+document.getElementById('adminCalendar'),
+{
+initialView:'dayGridMonth',
+height:'auto',
+
+events:'<?= BASE_URL ?>/leave/enterpriseCalendar',
+
+eventClick:function(info){
+showToast(
+info.event.title + ' ('+
+info.event.extendedProps.status+')'
+);
+}
+});
+
+calendar.render();
+window.adminCalendarLoaded=true;
+});
+</script>
+
 
 <?php require '../app/views/layouts/footer.php'; ?>

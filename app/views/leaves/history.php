@@ -15,7 +15,25 @@
                 data-bs-target="#applyLeaveCanvas">
           + Apply Leave
         </button>
+
+        <button class="btn btn-info" data-bs-toggle="offcanvas"
+          data-bs-target="#leaveCalendarCanvas">
+          📅 Calendar View
+          </button>
+
       </div>
+
+      <div class="offcanvas offcanvas-end" id="leaveCalendarCanvas">
+        <div class="offcanvas-header">
+        <h5>My Leave Calendar</h5>
+        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+        <div id="employeeCalendar"></div>
+        </div>
+        </div>
+
 
       <!-- Leave Summary -->
       <div class="alert alert-info mb-3">
@@ -263,6 +281,32 @@ leaveTypeSelect.addEventListener('change', function () {
 
 </script>
 
+<script>
+document.getElementById('leaveCalendarCanvas')
+.addEventListener('shown.bs.offcanvas', function () {
+
+if(window.empCalendarLoaded) return;
+
+const calendar = new FullCalendar.Calendar(
+document.getElementById('employeeCalendar'),
+{
+initialView:'dayGridMonth',
+height:'auto',
+
+events:'<?= BASE_URL ?>/leave/enterpriseCalendar',
+
+eventClick:function(info){
+showToast(
+info.event.title + ' ('+
+info.event.extendedProps.status+')'
+);
+}
+});
+
+calendar.render();
+window.empCalendarLoaded=true;
+});
+</script>
 
 
 

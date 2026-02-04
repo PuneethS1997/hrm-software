@@ -199,9 +199,17 @@ switch ($route) {
           case '/leave/action':
             (new LeaveController())->action();
             break;
-            case '/leaves/balance':
-                (new LeaveController())->balance();
-                break;
+
+         case '/leaves/balance':
+            (new LeaveController())->balance();
+            break;
+        
+         case '/leave/enterpriseCalendar':
+                    (new LeaveController())->enterpriseCalendar();
+                    break;
+
+
+                
               
 
     /* ========= 404 ========= */

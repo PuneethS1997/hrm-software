@@ -25,6 +25,11 @@ $user = $_SESSION['user'] ?? null;
   <!-- Data Table -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
 
+  <!-- calender view -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+
   <!-- Custom Global CSS -->
   <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css">
 <style>

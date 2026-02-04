@@ -137,4 +137,22 @@ class LeaveController
         $data = (new Leave())->calendarData($_SESSION['user']['id']);
         echo json_encode($data);
     }
+
+    public function enterpriseCalendar()
+{
+    AuthMiddleware::handle();
+
+    $leave = new Leave();
+
+    if ($_SESSION['user']['role'] == 'employee') {
+        echo json_encode(
+            $leave->enterpriseCalendarData($_SESSION['user']['id'])
+        );
+    } else {
+        echo json_encode(
+            $leave->enterpriseCalendarData()
+        );
+    }
+}
+
 }
