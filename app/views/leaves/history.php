@@ -290,39 +290,40 @@ document.getElementById('leaveCalendarCanvas')
 
 if(window.empCalendarLoaded) return;
 
+const calendarEl = document.getElementById('employeeCalendar');
+
 Promise.all([
 fetch("<?= BASE_URL ?>/leave/enterpriseCalendar").then(r=>r.json()),
 fetch("<?= BASE_URL ?>/holiday/calendar").then(r=>r.json())
 ])
-.then(([leaves,holidays])=>{
+.then(([leaves, holidays]) => {
 
-new FullCalendar.Calendar(calendarEl,{
-events:[...leaves,...holidays]
-}).render();
+const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 'auto',
+    events: [...leaves, ...holidays],
 
-});
-
-
-const calendar = new FullCalendar.Calendar(
-document.getElementById('employeeCalendar'),
-{
-initialView:'dayGridMonth',
-height:'auto',
-
-events:'<?= BASE_URL ?>/leave/enterpriseCalendar',
-
-eventClick:function(info){
-showToast(
-info.event.title + ' ('+
-info.event.extendedProps.status+')'
-);
-}
+    eventClick: function(info){
+        showToast(
+            info.event.title + 
+            (info.event.extendedProps.status 
+            ? ' ('+info.event.extendedProps.status+')'
+            : '')
+        );
+    }
 });
 
 calendar.render();
-window.empCalendarLoaded=true;
+window.empCalendarLoaded = true;
+
+})
+.catch(()=>{
+    showToast('Calendar failed to load','error');
+});
+
 });
 </script>
+
 
 
 
