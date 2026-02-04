@@ -135,6 +135,43 @@ class Leave extends Database
         return $row && $row['balance'] >= $row['total_days'];
     }
 
+    public function getBalance($userId, $leaveTypeId)
+{
+    // get max allowed days from leave_types
+    $stmt = $this->db->prepare(
+        "SELECT max_days FROM leave_types WHERE id=?"
+    );
+    $stmt->execute([$leaveTypeId]);
+    $max = $stmt->fetchColumn();
+
+    if (!$max) {
+        return [
+            'max' => 0,
+            'used' => 0,
+            'balance' => 0
+        ];
+    }
+
+    // calculate used approved leaves
+    $stmt2 = $this->db->prepare(
+        "SELECT COALESCE(SUM(total_days),0)
+         FROM leaves
+         WHERE user_id=? 
+         AND leave_type_id=? 
+         AND status='approved'"
+    );
+
+    $stmt2->execute([$userId, $leaveTypeId]);
+    $used = $stmt2->fetchColumn();
+
+    return [
+        'max' => (int)$max,
+        'used' => (int)$used,
+        'balance' => max(0, $max - $used)
+    ];
+}
+
+
     /* ================= DEDUCT BALANCE ================= */
 
     private function deductLeaveBalance($leaveId)

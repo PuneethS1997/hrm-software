@@ -199,7 +199,7 @@ switch ($route) {
           case '/leave/action':
             (new LeaveController())->action();
             break;
-            case '/leave/balance':
+            case '/leaves/balance':
                 (new LeaveController())->balance();
                 break;
               

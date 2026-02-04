@@ -18,12 +18,55 @@ class LeaveController
             exit;
         }
 
+        $leaveModel = new Leave();
+
+          $balance = $leaveModel->getBalance(
+            $_SESSION['user']['id'],
+            $_POST['leave_type_id']
+          );
+
+          if ($balance['balance'] <= 0 && $_POST['leave_type_id'] != 4) {
+            echo json_encode([
+              'success' => false,
+              'message' => 'Paid leave exhausted. Only unpaid leave allowed.'
+            ]);
+            exit;
+          }
+
+
         echo json_encode([
             'success' => false,
             'message' => 'Invalid request'
         ]);
         exit;
     }
+
+    public function balance()
+    {
+        AuthMiddleware::handle();
+    
+        header('Content-Type: application/json');
+    
+        if (!isset($_GET['leave_type_id'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Leave type missing'
+            ]);
+            exit;
+        }
+    
+        $leave = new Leave();
+    
+        $data = $leave->getBalance(
+            $_SESSION['user']['id'],
+            $_GET['leave_type_id']
+        );
+    
+        echo json_encode($data);
+        exit;
+    }
+    
+    
 
     /* ================= EMPLOYEE HISTORY ================= */
     public function history()

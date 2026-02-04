@@ -19,6 +19,7 @@
 
       <!-- Leave Summary -->
       <div class="alert alert-info mb-3">
+        <b>Total Leaves Summary</b>
         <b>Total:</b> <?= $summary['total'] ?>
         | <b>Used:</b> <?= $summary['used'] ?>
         | <b>Balance:</b> <?= $summary['balance'] ?>
@@ -72,15 +73,16 @@
 
       <div class="mb-3">
         <label class="form-label">Leave Type</label>
-        <select id="leaveType" name="leave_type_id" class="form-control" required>
-          <option value="">Select</option>
-          <?php foreach ($leaveTypes as $type): ?>
-            <option value="<?= $type['id'] ?>"
-                    data-balance="<?= $summary['balance'] ?>">
-              <?= htmlspecialchars($type['name']) ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
+    
+          <select id="leaveType" name="leave_type_id" class="form-control" required>
+            <option value="">Select</option>
+            <?php foreach ($leaveTypes as $type): ?>
+              <option value="<?= $type['id'] ?>">
+                <?= htmlspecialchars($type['name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+
       </div>
 
       <div class="mb-3">
@@ -116,6 +118,11 @@
 
 
 <div id="toast" class="toast-msg"></div>
+<div class="alert alert-info mt-2 d-none" id="unpaidInfo">
+  ℹ️ Your paid leave balance is exhausted.
+  Only <strong>Unpaid Leave</strong> is available.
+</div>
+  
 
 
 <script>
@@ -124,88 +131,136 @@ function calcDays() {
   const e = new Date(document.getElementById('end').value);
 
   if (s && e && e >= s) {
-    const days = Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
+    const days = Math.floor((e - s) / (1000*60*60*24)) + 1;
     document.getElementById('days').value = days;
     validateBalance();
   }
 }
 
 function validateBalance() {
-  const type = document.getElementById('leaveType');
-  if (!type.value) return;
 
-  const balance = parseInt(type.selectedOptions[0].dataset.balance);
+  const typeEl = document.getElementById('leaveType');
+  if (!typeEl.value) return;
+
   const days = parseInt(document.getElementById('days').value || 0);
 
-  const box = document.getElementById('leaveBalanceBox');
-  const err = document.getElementById('leaveError');
-  const btn = document.querySelector('#leaveForm button');
-
-  box.classList.remove('d-none');
-  box.innerHTML = `🟢 Available Balance: <b>${balance}</b> days`;
-
-  if (days > balance) {
-    err.classList.remove('d-none');
-    err.innerHTML = '❌ Insufficient leave balance';
-    btn.disabled = true;
-  } else {
-    err.classList.add('d-none');
-    btn.disabled = false;
-  }
-}
-
-document.getElementById('start').onchange = calcDays;
-document.getElementById('end').onchange = calcDays;
-document.getElementById('leaveType').onchange = validateBalance;
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  const form = document.getElementById('leaveForm');
-  if (!form) {
-    console.error('leaveForm not found');
-    return;
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-
-    fetch("<?= BASE_URL ?>/leaves/apply", {
-      method: "POST",
-      body: formData
-    })
+  fetch(`<?= BASE_URL ?>/leaves/balance?leave_type_id=${typeEl.value}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data); // DEBUG
 
-      if (data.success) {
-        // alert('toast function about to run');
+      const balance = parseInt(data.balance || 0);
 
-        showToast('Leave applied successfully ✅', 'success');
+      const box = document.getElementById('leaveBalanceBox');
+      const err = document.getElementById('leaveError');
+      const btn = document.querySelector('#leaveForm button');
 
-        form.reset();
-        document.getElementById('days').value = '';
+      box.classList.remove('d-none');
+      box.innerHTML = `🟢 Available Balance: <b>${balance}</b> days`;
 
-        // close offcanvas
-        const canvasEl = document.getElementById('applyLeaveCanvas');
-        const canvas = bootstrap.Offcanvas.getInstance(canvasEl);
-        if (canvas) canvas.hide();
-
-        setTimeout(() => location.reload(), 1200);
+      if (days > balance && typeEl.value != 4) {
+        err.classList.remove('d-none');
+        err.innerHTML = '❌ Insufficient leave balance';
+        btn.disabled = true;
       } else {
-        showToast(data.message || 'Something went wrong', 'error');
+        err.classList.add('d-none');
+        btn.disabled = false;
       }
-    })
-    .catch(err => {
-      console.error(err);
-      showToast('Server error', 'error');
-    });
-  });
 
+    })
+    .catch(() => {
+      document.getElementById('leaveError').classList.remove('d-none');
+      document.getElementById('leaveError').innerHTML =
+        '⚠ Unable to check leave balance';
+    });
+}
+
+document.getElementById('leaveType').addEventListener('change', validateBalance);
+document.getElementById('start').addEventListener('change', calcDays);
+document.getElementById('end').addEventListener('change', calcDays);
+</script>
+
+
+
+<script>
+
+function showToasts(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className = 'toast-msg show';
+
+  if (type === 'success') toast.classList.add('toast-success');
+  if (type === 'error') toast.classList.add('toast-error');
+  if (type === 'warning') toast.classList.add('toast-warning');
+
+  setTimeout(() => {
+    toast.className = 'toast-msg';
+  }, 3000);
+}
+
+document.getElementById('leaveForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  fetch('/crm-hrms/public/leaves/apply', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    // console.log(data);
+  // showToast('Leave applied successfully ✅', 'success');
+
+    if (data.success) {
+      showToasts('Leave applied successfully ✅', 'success');
+
+      // optional: reset form
+      this.reset();
+
+      // optional: close offcanvas
+      const canvas = bootstrap.Offcanvas.getInstance(
+        document.getElementById('applyLeaveCanvas')
+      );
+      canvas?.hide();
+
+    } else {
+      showToasts(data.message || 'Something went wrong ❌', 'error');
+    }
+  })
+  .catch(() => {
+    showToasts('Server error ❌', 'error');
+  });
 });
+
+
+const leaveTypeSelect = document.getElementById('leaveType');
+const unpaidInfo = document.getElementById('unpaidInfo');
+
+leaveTypeSelect.addEventListener('change', function () {
+  const leaveTypeId = this.value;
+  if (!leaveTypeId) return;
+
+  fetch(`/crm-hrms/public/leaves/balance?leave_type_id=${leaveTypeId}`)
+    .then(res => res.json())
+    .then(data => {
+      // If balance is zero AND not unpaid leave (assuming unpaid id = 4)
+      if (data.balance <= 0 && leaveTypeId != 4) {
+        // Auto switch to unpaid
+        leaveTypeSelect.value = 4;
+
+        unpaidInfo.classList.remove('d-none');
+        showToast(
+          'Paid leave exhausted. Switching to Unpaid Leave.',
+          'warning'
+        );
+      } else {
+        unpaidInfo.classList.add('d-none');
+      }
+    });
+});
+
 </script>
 
 

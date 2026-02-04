@@ -123,6 +123,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // function showToast(message, type = 'success') {
+  //   const toast = document.getElementById('toast');
+  //   if (!toast) return;
+
+  //   toast.textContent = message;
+  //   toast.className = 'toast-msg show';
+
+  //   if (type === 'success') toast.classList.add('toast-success');
+  //   if (type === 'error') toast.classList.add('toast-error');
+  //   if (type === 'warning') toast.classList.add('toast-warning');
+
+  //   setTimeout(() => {
+  //     toast.className = 'toast-msg';
+  //   }, 3000);
+  // }
+
+
   // UPDATE BUTTON CLICK
   const updateBtn = document.getElementById("updateEmployeeBtn");
 
@@ -535,59 +552,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // leave modules
-// function showToast(message, type = 'success') {
-//   const toast = document.getElementById('toast');
-//   toast.textContent = message;
-//   toast.className = 'toast show';
-
-//   if (type === 'error') {
-//     toast.classList.add('error');
-//   }
-
-//   setTimeout(() => {
-//     toast.className = 'toast';
-//   }, 3000);
-// }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-  const leaveForm = document.getElementById('leaveForm');
-  if (!leaveForm) return;
 
-  leaveForm.addEventListener('submit', function (e) {
-    e.preventDefault(); // This stops the reload
+// document.addEventListener('DOMContentLoaded', function () {
+//   const leaveForm = document.getElementById('leaveForm');
+//   if (!leaveForm) return;
 
-    // Create FormData from the current form (this)
-    const formData = new FormData(this);
+//   leaveForm.addEventListener('submit', function (e) {
+//     e.preventDefault(); // This stops the reload
 
-    fetch('/crm-hrms/public/leaves/apply', {
-      method: 'POST',
-      body: formData
-      // IMPORTANT: Do NOT set 'Content-Type' header manually; 
-      // the browser needs to set the boundary for multipart/form-data.
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          // Verify 'bootstrap' is loaded globally before calling this
-          const canvasElement = document.getElementById('applyLeaveCanvas');
-          if (canvasElement) {
-            const canvas = bootstrap.Offcanvas.getOrCreateInstance(canvasElement);
-            canvas.hide();
-          }
+//     // Create FormData from the current form (this)
+//     const formData = new FormData(this);
 
-          showToast('Leave applied successfully ✅');
-          setTimeout(() => location.reload(), 1200);
-        } else {
-          showToast(data.message || 'Error', 'error');
-        }
-      })
-      .catch(err => {
-        console.error('Fetch error:', err);
-        showToast('Server error occurred', 'error');
-      });
-  });
-});
+//     fetch('/crm-hrms/public/leaves/apply', {
+//       method: 'POST',
+//       body: formData
+//       // IMPORTANT: Do NOT set 'Content-Type' header manually; 
+//       // the browser needs to set the boundary for multipart/form-data.
+//     })
+//       .then(res => res.json())
+//       .then(data => {
+//         if (data.success) {
+//           // Verify 'bootstrap' is loaded globally before calling this
+//           const canvasElement = document.getElementById('applyLeaveCanvas');
+//           if (canvasElement) {
+//             const canvas = bootstrap.Offcanvas.getOrCreateInstance(canvasElement);
+//             canvas.hide();
+//           }
+
+//           showToast('Leave applied successfully ✅', 'success');
+//           setTimeout(() => location.reload(), 1200);
+//         } else {
+//           showToast(data.message || 'Error', 'error');
+//         }
+//       })
+//       .catch(err => {
+//         console.error('Fetch error:', err);
+//         showToast('Server error occurred', 'error');
+//       });
+//   });
+// });
 
 
 
