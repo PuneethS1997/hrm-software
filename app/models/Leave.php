@@ -217,10 +217,60 @@ class Leave extends Database
 
     // calender view
 
-    public function enterpriseCalendarData($userId = null)
+//     public function enterpriseCalendarData($userId = null)
+// {
+//     $sql = "
+//         SELECT 
+//             l.start_date,
+//             DATE_ADD(l.end_date, INTERVAL 1 DAY) AS end_date,
+//             l.status,
+//             l.reason,
+//             u.name,
+//             lt.name AS leave_type
+//         FROM leaves l
+//         JOIN users u ON u.id = l.user_id
+//         JOIN leave_types lt ON lt.id = l.leave_type_id
+//     ";
+
+//     if ($userId) {
+//         $sql .= " WHERE l.user_id = ?";
+//         $stmt = $this->db->prepare($sql);
+//         $stmt->execute([$userId]);
+//     } else {
+//         $stmt = $this->db->query($sql);
+//     }
+
+//     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+//     $events = [];
+
+//     foreach ($rows as $r) {
+
+//         $color = '#ffc107';
+
+//         if ($r['status']=='approved') $color='#28a745';
+//         if ($r['status']=='rejected') $color='#dc3545';
+//         if ($r['leave_type']=='Unpaid Leave') $color='#343a40';
+
+//         $events[] = [
+//             'title' => $r['name'].' - '.$r['leave_type'],
+//             'start' => $r['start_date'],
+//             'end'   => $r['end_date'],
+//             'color' => $color,
+//             'extendedProps' => [
+//                 'reason' => $r['reason'],
+//                 'status' => $r['status']
+//             ]
+//         ];
+//     }
+
+//     return $events;
+// }
+public function enterpriseCalendarData($userId = null)
 {
     $sql = "
-        SELECT 
+        SELECT
+            l.user_id,
             l.start_date,
             DATE_ADD(l.end_date, INTERVAL 1 DAY) AS end_date,
             l.status,
@@ -233,9 +283,7 @@ class Leave extends Database
     ";
 
     if ($userId) {
-        $sql .= " WHERE l.user_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$userId]);
+        $stmt = $this->db->query($sql);
     } else {
         $stmt = $this->db->query($sql);
     }
@@ -252,14 +300,19 @@ class Leave extends Database
         if ($r['status']=='rejected') $color='#dc3545';
         if ($r['leave_type']=='Unpaid Leave') $color='#343a40';
 
+        if ($userId && $r['user_id'] != $userId) {
+            $color = '#6c757d'; // other employee leave
+        }
+
         $events[] = [
-            'title' => $r['name'].' - '.$r['leave_type'],
+            'title' => '🧑 '.$r['name'].' - '.$r['leave_type'],
             'start' => $r['start_date'],
             'end'   => $r['end_date'],
             'color' => $color,
             'extendedProps' => [
                 'reason' => $r['reason'],
-                'status' => $r['status']
+                'status' => $r['status'],
+                'employee' => $r['name']
             ]
         ];
     }
@@ -278,6 +331,39 @@ public function storeLeaveType($name, $max, $carry)
 }
 
 
+public function getEnterpriseCalendarData()
+{
+    $stmt = $this->db->query("
+        SELECT
+            l.start_date,
+            DATE_ADD(l.end_date, INTERVAL 1 DAY) AS end,
+            l.status,
+            u.name,
+            l.user_id
+        FROM leaves l
+        JOIN users u ON u.id = l.user_id
+        WHERE l.status='approved'
+    ");
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function hasLeaveClash($start, $end)
+{
+    $stmt = $this->db->prepare("
+        SELECT COUNT(*) 
+        FROM leaves
+        WHERE status='approved'
+        AND (
+            (? BETWEEN start_date AND end_date)
+            OR
+            (? BETWEEN start_date AND end_date)
+        )
+    ");
+
+    $stmt->execute([$start, $end]);
+
+    return $stmt->fetchColumn() > 0;
+}
 
 
 
