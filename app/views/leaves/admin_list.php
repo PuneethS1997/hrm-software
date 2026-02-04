@@ -15,6 +15,46 @@
           Manage Leave Types
       </button>
 
+      <button class="btn btn-warning"
+data-bs-toggle="offcanvas"
+data-bs-target="#holidayCanvas">
+Add Holiday
+</button>
+
+<div class="offcanvas offcanvas-end" id="holidayCanvas">
+
+<div class="offcanvas-header">
+<h5>Add Holiday</h5>
+<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+<form id="holidayForm">
+
+<input name="title" class="form-control mb-2"
+placeholder="Holiday Name" required>
+
+<input type="date"
+name="holiday_date"
+class="form-control mb-2" required>
+
+<select name="type" class="form-control mb-2">
+<option value="public">Public Holiday</option>
+<option value="company">Company Holiday</option>
+<option value="optional">Optional Holiday</option>
+</select>
+
+<button class="btn btn-success w-100">
+Save Holiday
+</button>
+
+</form>
+
+</div>
+</div>
+
+
       <div class="offcanvas offcanvas-end"
      tabindex="-1"
      id="leavePolicyCanvas"
@@ -150,6 +190,19 @@ document.getElementById('adminCalendarCanvas')
 
 if(window.adminCalendarLoaded) return;
 
+Promise.all([
+fetch("<?= BASE_URL ?>/leave/enterpriseCalendar").then(r=>r.json()),
+fetch("<?= BASE_URL ?>/holiday/calendar").then(r=>r.json())
+])
+.then(([leaves,holidays])=>{
+
+new FullCalendar.Calendar(calendarEl,{
+events:[...leaves,...holidays]
+}).render();
+
+});
+
+
 const calendar = new FullCalendar.Calendar(
 document.getElementById('adminCalendar'),
 {
@@ -194,5 +247,22 @@ document.getElementById('leaveTypeForm')
 });
 </script>
 
+<script>
+document.getElementById('holidayForm')
+.addEventListener('submit',function(e){
+
+e.preventDefault();
+
+fetch("<?= BASE_URL ?>/holiday/store",{
+method:'POST',
+body:new FormData(this)
+})
+.then(r=>r.json())
+.then(()=>{
+showToast("Holiday Added 🎉");
+location.reload();
+});
+});
+</script>
 
 <?php require '../app/views/layouts/footer.php'; ?>

@@ -217,7 +217,14 @@ switch ($route) {
                         break;
                     
 
-                
+                        case '/holiday/store':
+                            (new LeaveController())->storeHoliday();
+                            break;
+                        
+                        case '/holiday/calendar':
+                            (new LeaveController())->holidayCalendar();
+                            break;
+                        
 
                 
               

@@ -290,6 +290,19 @@ document.getElementById('leaveCalendarCanvas')
 
 if(window.empCalendarLoaded) return;
 
+Promise.all([
+fetch("<?= BASE_URL ?>/leave/enterpriseCalendar").then(r=>r.json()),
+fetch("<?= BASE_URL ?>/holiday/calendar").then(r=>r.json())
+])
+.then(([leaves,holidays])=>{
+
+new FullCalendar.Calendar(calendarEl,{
+events:[...leaves,...holidays]
+}).render();
+
+});
+
+
 const calendar = new FullCalendar.Calendar(
 document.getElementById('employeeCalendar'),
 {

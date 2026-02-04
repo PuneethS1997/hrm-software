@@ -2,7 +2,7 @@
 require_once '../app/middleware/AuthMiddleware.php';
 require_once '../app/middleware/RoleMiddleware.php';
 require_once '../app/models/Leave.php';
-
+require_once '../app/models/Holiday.php'; 
 class LeaveController
 {
     /* ================= APPLY LEAVE ================= */
@@ -174,6 +174,27 @@ public function listLeaveTypes()
     echo json_encode($model->getLeaveTypes());
 }
 
+public function storeHoliday()
+{
+    AuthMiddleware::handle();
+    RoleMiddleware::allow(['admin','super_admin']);
+
+    $holiday = new Holiday();
+
+    $holiday->store($_POST);
+
+    echo json_encode(['success'=>true]);
+    exit;
+}
+public function holidayCalendar()
+{
+    AuthMiddleware::handle();
+
+    $data = (new Holiday())->calendarData();
+
+    echo json_encode($data);
+    exit;
+}
 
 
 
