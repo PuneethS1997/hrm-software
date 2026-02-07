@@ -282,70 +282,33 @@ body.dark-mode .kpi-card {
 
 /* MAIN CONTENT */
 
-#main-content {
-  margin-top: 5px;
-  margin-left: 200px;
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-}
-
-#main-content.expanded {
-  margin-left: 80px;
-}
-
-#list-main-content {
-  margin-top: 5px;
-  margin-left: 200px;
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-}
-
-#list-main-content.expanded {
-  margin-left: 80px;
-}
-
+#main-content,
+#list-main-content,
 #trash-main-content {
-  margin-top: 5px;
   margin-left: 200px;
   padding: 20px;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-#trash-main-content.expanded {
+/* COLLAPSED DESKTOP */
+.sidebar.collapsed ~ #main-content,
+.sidebar.collapsed ~ #list-main-content,
+.sidebar.collapsed ~ #trash-main-content {
   margin-left: 80px;
 }
 
+/* MOBILE MODE */
 @media (max-width: 768px) {
- 
-
   #main-content,
-  #main-content.expanded {
-    margin-left: 0;
-  }
-
-  #main-content {
-    margin-left: 0px;
-    transition: margin-left 0.3s ease;
-  }
-
   #list-main-content,
-  #list-main-content.expanded {
-    margin-left: 0;
-  }
-
-  #list-main-content {
-    margin-left: 0px;
-    transition: margin-left 0.3s ease;
-  }
-
-  #trash-main-content,
-  #trash-main-content.expanded {
-    margin-left: 0;
-  }
-
   #trash-main-content {
+    margin-left: 0;
+  }
+
+  .sidebar.collapsed ~ #main-content,
+  .sidebar.collapsed ~ #list-main-content,
+  .sidebar.collapsed ~ #trash-main-content {
     margin-left: 0px;
-    transition: margin-left 0.3s ease;
   }
 }
 
