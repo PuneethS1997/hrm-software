@@ -654,13 +654,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  startDate.addEventListener('change', calculateDays);
-  endDate.addEventListener('change', calculateDays);
-  leaveType.addEventListener('change', () => {
-    if (totalDaysInput.value) {
-      checkLeaveBalance(parseInt(totalDaysInput.value));
-    }
-  });
+  if (startDate) {
+    startDate.addEventListener('change', calculateDays);
+  }
+
+  if (endDate) {
+    endDate.addEventListener('change', calculateDays);
+  }
+
+  if (leaveType) {
+    leaveType.addEventListener('change', () => {
+      if (totalDaysInput?.value) {
+        checkLeaveBalance(parseInt(totalDaysInput.value));
+      }
+    });
+  }
+
 
 
 
