@@ -43,31 +43,31 @@ function togglePassword() {
 
 // });
 
-document.addEventListener("DOMContentLoaded", function () {
+// document.addEventListener("DOMContentLoaded", function () {
 
-  const toggleBtn = document.getElementById("toggleSidebar");
-  const sidebar = document.getElementById("sidebar");
-  const content = document.querySelector(".main-content"); // ✅ FIX
+//   const toggleBtn = document.getElementById("toggleSidebar");
+//   const sidebar = document.getElementById("sidebar");
+//   const content = document.querySelector(".main-content"); // ✅ FIX
 
-  if (!toggleBtn || !sidebar || !content) {
-    console.warn("Sidebar toggle elements missing");
-    return;
-  }
+//   if (!toggleBtn || !sidebar || !content) {
+//     console.warn("Sidebar toggle elements missing");
+//     return;
+//   }
 
-  toggleBtn.addEventListener("click", function () {
+//   toggleBtn.addEventListener("click", function () {
 
-    if (window.innerWidth <= 768) {
-      // 📱 Mobile
-      sidebar.classList.toggle("show");
-    } else {
-      // 💻 Desktop
-      sidebar.classList.toggle("collapsed");
-      content.classList.toggle("expanded");
-    }
+//     if (window.innerWidth <= 768) {
+//       // 📱 Mobile
+//       sidebar.classList.toggle("show");
+//     } else {
+//       // 💻 Desktop
+//       sidebar.classList.toggle("collapsed");
+//       content.classList.toggle("expanded");
+//     }
 
-  });
+//   });
 
-});
+// });
 
 // employee edit 
 
@@ -646,5 +646,75 @@ leaveType.addEventListener('change', () => {
     checkLeaveBalance(parseInt(totalDaysInput.value));
   }
 });
+
+
+
+
+
+// sidear meu
+document.addEventListener("DOMContentLoaded", function () {
+
+  initSidebar();
+  initTheme();
+  initEmployeeEdit();
+
+});
+
+
+function initSidebar() {
+
+  const toggleBtn = document.getElementById("menuToggle");
+  const sidebar = document.getElementById("sidebar");
+  const main = document.getElementById("main-content");
+
+  if (!toggleBtn || !sidebar) {
+    console.warn("Sidebar elements missing");
+    return;
+  }
+
+  toggleBtn.addEventListener("click", function () {
+
+    if (window.innerWidth <= 768) {
+
+      sidebar.classList.toggle("show");
+
+    } else {
+
+      sidebar.classList.toggle("collapsed");
+
+      if (main) {
+        main.classList.toggle("expanded");
+      }
+
+    }
+
+  });
+
+}
+
+function initTheme() {
+
+  const btn = document.getElementById("themeToggle");
+
+  if (!btn) return;
+
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+
+  btn.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("dark-mode")
+        ? "dark"
+        : "light"
+    );
+
+  });
+
+}
 
 

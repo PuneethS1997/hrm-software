@@ -12,7 +12,7 @@
 
         <div class="row g-4">
 
-            <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>

@@ -51,9 +51,14 @@ $user = $_SESSION['user'] ?? null;
 
   <!-- LEFT -->
   <div class="d-flex align-items-center gap-3">
-    <button id="toggleSidebar" class="btn btn-sm btn-outline-light">
+    <!-- <button id="toggleSidebar" class="btn btn-sm btn-outline-light">
       ☰
-    </button>
+    </button> -->
+    <button id="menuToggle" class="btn btn-sm btn-light">
+☰
+</button>
+
+
     <span class="fw-semibold text-white">CRM‑HRMS</span>
   </div>
 
@@ -79,6 +84,10 @@ $user = $_SESSION['user'] ?? null;
         ⏷
       </button>
     </div>
+    <button id="themeToggle" class="btn btn-sm btn-dark">
+🌙
+</button>
+
 
     <!-- NOTIFICATION -->
     <i class="bi bi-bell position-relative fs-5">

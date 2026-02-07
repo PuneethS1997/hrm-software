@@ -10,7 +10,7 @@
 
             <div class="row">
 
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -43,7 +43,7 @@
        
 
 
-            <div class="col-md-4">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="kpi-card">
                     <div class="d-flex justify-content-between">
                         <div>

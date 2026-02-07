@@ -1,5 +1,24 @@
+:root {
+  --bg-main: #f1f5f9;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #6b7280;
+  --sidebar-bg: rgba(255, 255, 255, 0.21);
+  --header-bg: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode {
+  --bg-main: #020617;
+  --card-bg: #0f172a;
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --sidebar-bg: rgba(2, 6, 23, 0.8);
+  --header-bg: rgba(15, 23, 42, 0.7);
+}
+
 body {
-  background-image: url(../images/dashboard/body_bg.jpg);
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 /* HEADER */
@@ -10,7 +29,7 @@ body {
   right: 0;
   height: 56px;
   /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--header-bg);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3px);
@@ -26,7 +45,7 @@ body {
 .topbar {
   height: 56px;
   /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--header-bg);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3px);
@@ -163,7 +182,7 @@ body {
   overflow-y: auto;
   z-index: 999;
   /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.21);
+  background: var(--sidebar-bg);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(1.1px);
@@ -225,6 +244,20 @@ body {
   position: absolute;
   bottom: 10px;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    left: -220px;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .top-header {
+    padding-left: 60px;
+  }
 }
 
 /* dashboard  */
@@ -310,12 +343,15 @@ body {
 }
 
 .kpi-card {
-  background: #ffffff;
+  background: var(--card-bg);
   cursor: pointer;
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .kpi-card:hover {
@@ -333,7 +369,14 @@ body {
   color: #fff;
   font-size: 22px;
 }
-
+@media (max-width: 768px) {
+  .top-search {
+    width: 100%;
+  }
+  .kpi-value {
+    font-size: 20px;
+  }
+}
 .bg-blue {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
