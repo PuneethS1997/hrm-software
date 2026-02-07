@@ -21,6 +21,24 @@ body {
   color: var(--text-main);
 }
 
+body.dark-mode {
+  background: #121212;
+  color: #e5e7eb;
+}
+
+body.dark-mode .topbar {
+  background: #1f2937;
+}
+
+body.dark-mode .sidebar {
+  background: #111827;
+}
+
+body.dark-mode .kpi-card {
+  background: #1f2937;
+  color: #fff;
+}
+
 /* HEADER */
 .top-header {
   position: fixed;
@@ -298,13 +316,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    left: 0px;
-  }
-
-  .sidebar.show {
-    left: 0;
-  }
+ 
 
   #main-content,
   #main-content.expanded {
