@@ -3,7 +3,7 @@ $user = $_SESSION['user'] ?? null;
 $role = $user['role'] ?? '';
 ?>
 
-<div id="sidebar" class="sidebar">
+<div id="sidebar" class="sidebar collapsed">
   <div class="sidebar-header">
     <span class="logo">CRM-HRMS</span>
   </div>

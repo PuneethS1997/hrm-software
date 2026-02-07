@@ -348,12 +348,43 @@ function resetUI() {
   breakSeconds = 0;
 }
 
+// function loadLiveAttendance() {
+//   fetch('/crm-hrms/public/attendance/liveAttendance')
+//     .then(r => r.json())
+//     .then(data => {
+//       let html = '';
+//       data.forEach(e => {
+//         let badge =
+//           e.status === 'active' ? 'success' :
+//             e.status === 'break' ? 'warning' : 'secondary';
+
+//         html += `
+//           <tr>
+//             <td>${e.name}</td>
+//             <td>${renderStatus(e)}</td>
+//             <td>${formatTime(e.login_time)}</td>
+//             <td>${formatDuration(e.total_minutes)}</td>
+//             </tr>`;
+//       });
+//       document.getElementById('attendanceBody').innerHTML = html;
+//     });
+// }
+
 function loadLiveAttendance() {
+
+  const tableBody = document.getElementById('attendanceBody');
+
+  // STOP if element not present
+  if (!tableBody) return;
+
   fetch('/crm-hrms/public/attendance/liveAttendance')
     .then(r => r.json())
     .then(data => {
+
       let html = '';
+
       data.forEach(e => {
+
         let badge =
           e.status === 'active' ? 'success' :
             e.status === 'break' ? 'warning' : 'secondary';
@@ -364,11 +395,16 @@ function loadLiveAttendance() {
             <td>${renderStatus(e)}</td>
             <td>${formatTime(e.login_time)}</td>
             <td>${formatDuration(e.total_minutes)}</td>
-            </tr>`;
+          </tr>`;
+
       });
-      document.getElementById('attendanceBody').innerHTML = html;
+
+      tableBody.innerHTML = html;
+
     });
+
 }
+
 
 loadLiveAttendance();
 setInterval(loadLiveAttendance, 10000);

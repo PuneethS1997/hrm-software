@@ -3,7 +3,7 @@
 
 
 <!-- MAIN CONTENT WRAPPER -->
-<div id="main-content" class="main-content">
+<div id="main-content" class="expanded">
     <div class="content-wrapper p-4">
         <!-- dashboard content here -->
         <h2>🧑‍💼 Admin Dashboard</h2>
