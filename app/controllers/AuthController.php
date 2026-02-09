@@ -34,14 +34,7 @@ class AuthController {
         require __DIR__ . '/../views/auth/login.php';
     }
 
-//     public function logout() {
-//     session_start();
-//     session_unset();
-//     session_destroy();
 
-//     header('Location: ' . BASE_URL);
-//     exit;
-// }
 
 public function logout()
 {

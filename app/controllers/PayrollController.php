@@ -70,4 +70,4 @@ class PayrollController {
 
     require '../app/views/payroll/generate.php';
   }
-}
+

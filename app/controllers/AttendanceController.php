@@ -55,28 +55,7 @@ public function checkOut()
     echo json_encode(['status' => 'success']);
 }
 
-// public function status() {
-//     header('Content-Type: application/json');
-//     AuthMiddleware::handle();
-  
-//     $attendance = new Attendance();
-//     $today = $attendance->getToday($_SESSION['user']['id']);
-  
-//     if (!$today) {
-//       echo json_encode(['status' => 'not_logged_in']);
-//       exit;
-//     }
-  
-//     echo json_encode([
-//       'status'        => 'active',
-//       'login_time'      => $today['login_time'],
-//       'logout_time'     => $today['logout_time'],
-//       'break_start'   => $today['break_start'],
-//       'break_end'     => $today['break_end'],
-//       'work_seconds' => $attendance->getLiveWorkSeconds($today)
-//     ]);
-//     exit;
-//   }
+
   
 
   public function action() {
