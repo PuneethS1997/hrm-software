@@ -87,36 +87,7 @@ public function getToday($userId) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  // public function login($userId) {
-  //   $stmt = $this->db->prepare(
-  //     "INSERT INTO attendance (user_id, attendance_date, login_time)
-  //      VALUES (?, CURRENT_DATE, NOW())"
-  //   );
-  //   return $stmt->execute([$userId]);
-  // }
-
-  // public function breakStart($id) {
-  //   return $this->db->prepare(
-  //     "UPDATE attendance SET break_start=NOW()
-  //      WHERE id=?"
-  //   )->execute([$id]);
-  // }
-
-  // public function breakEnd($id) {
-  //   return $this->db->prepare(
-  //     "UPDATE attendance SET break_end=NOW()
-  //      WHERE id=?"
-  //   )->execute([$id]);
-  // }
-
-  // public function logout($id) {
-  //   return $this->db->prepare(
-  //     "UPDATE attendance
-  //      SET logout_time=NOW(),
-  //          total_minutes = TIMESTAMPDIFF(MINUTE, login_time, NOW())
-  //      WHERE id=?"
-  //   )->execute([$id]);
-  // }
+  
 
   public function getLiveWorkSeconds($attendance) {
     if (!$attendance || !$attendance['login_time']) return 0;
