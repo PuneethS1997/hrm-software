@@ -224,11 +224,7 @@ public function bulkUndo($ids)
     /* =========================
        TRASH
     ========================= */
-    // public function trashedEmployees()
-    // {
-    //     $this->db->query("SELECT * FROM users WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC");
-    //     return $this->db->resultSet();
-    // }
+  
     public function trashedEmployees() {
     $sql = "SELECT * FROM users WHERE deleted_at IS NOT NULL ORDER BY id DESC";
     $stmt = $this->db->prepare($sql);
