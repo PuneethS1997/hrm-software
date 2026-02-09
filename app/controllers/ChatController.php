@@ -5,10 +5,10 @@ require_once '../app/models/Chat.php';
 class ChatController {
 
   // Chat user list
-  public function index() {
-    AuthMiddleware::handle();
-    require '../app/views/chat/index.php';
-  }
+  // public function index() {
+  //   AuthMiddleware::handle();
+  //   require '../app/views/chat/index.php';
+  // }
 
   // Open a conversation
   public function conversation($receiverId) {
@@ -29,40 +29,40 @@ class ChatController {
   }
 
   // Send message
- public function send() {
-  AuthMiddleware::handle();
+  /* Chat Page */
+  public function index($receiverId)
+  {
+      $data['receiverId'] = $receiverId;
 
-  $chat = new Chat();
-
-  if (!empty($_FILES['file']['name'])) {
-    $chat->sendFile(
-      $_SESSION['user']['id'],
-      $_POST['receiver_id'],
-      $_POST['message'] ?? '',
-      $_FILES['file']
-    );
-  } else {
-    $chat->send(
-      $_SESSION['user']['id'],
-      $_POST['receiver_id'],
-      $_POST['message']
-    );
-  }
-}
-
-
-  // Fetch messages (AJAX polling)
-  public function fetch() {
-    AuthMiddleware::handle();
-
-    echo json_encode(
-      (new Chat())->fetch(
-        $_SESSION['user']['id'],
-        $_GET['user']
-      )
-    );
+      require '../app/views/chat/index.php';
   }
 
+  /* Send Message */
+  public function send()
+  {
+      $input = json_decode(file_get_contents("php://input"), true);
 
+      $data = [
+          'sender_id' => $_SESSION['user']['id'],
+          'receiver_id' => $input['receiver_id'],
+          'message' => $input['message']
+      ];
 
+      $this->chat->sendMessage($data);
+
+      echo json_encode(['status' => 'success']);
+  }
+
+  /* Fetch Messages */
+  public function fetch($receiverId)
+  {
+      $sender = $_SESSION['user']['id'];
+
+      $messages = $this->chat
+          ->getConversation($sender, $receiverId);
+
+      $this->chat->markSeen($receiverId, $sender);
+
+      echo json_encode($messages);
+  }
 }

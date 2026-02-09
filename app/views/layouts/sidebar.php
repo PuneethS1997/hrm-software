@@ -89,6 +89,13 @@ $role = $user['role'] ?? '';
       </li>
     <?php endif; ?>
 
+    <li class="chat">
+      <a href="<?= BASE_URL ?>/chat/index">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Chat</span>
+      </a>
+    </li>
+
     <li class="logout">
       <a href="<?= BASE_URL ?>/logout">
         <i class="bi bi-box-arrow-right"></i>

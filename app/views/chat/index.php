@@ -1,36 +1,70 @@
-<div class="container-fluid py-3">
-  <div class="row">
-    <div class="col-md-4 border-end">
-      <h6 class="fw-bold">Employees</h6>
-      <ul class="list-group">
-        <!-- Loop users here -->
-        <li class="list-group-item chat-user" data-id="2">
-          John Doe
-          <span class="badge bg-success float-end">●</span>
-        </li>
-      </ul>
+<?php require '../app/views/layouts/header.php'; ?>
+<?php require '../app/views/layouts/sidebar.php'; ?>
+
+<div id="main-content" class="main-content">
+
+<div class="chat-wrapper">
+
+    <div id="chatBox"></div>
+
+    <div class="chat-input">
+        <input type="text" id="messageInput"
+               placeholder="Type message...">
+
+        <button onclick="sendMessage()">Send</button>
     </div>
 
-    <div class="col-md-8">
-      <div id="chatBox" class="border rounded p-3" style="height:400px; overflow-y:auto"></div>
-
-      <div class="input-group mt-2">
-        <input type="text" id="message" class="form-control" placeholder="Type message">
-        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-  </div>
 </div>
 
-<?php foreach ($users as $user): ?>
-  <li class="list-group-item chat-user" data-id="<?= $user['id'] ?>">
-    <?= $user['name'] ?>
-    <span class="float-end">
-      <?= $user['online'] ? '🟢' : '⚪' ?>
-    </span>
-  </li>
-<?php endforeach; ?>
+</div>
 
+<script>
 
+const receiverId = <?= $data['receiverId'] ?>;
 
-<script src="/assets/js/chat.js"></script>
+function loadMessages()
+{
+    fetch(`/crm-hrms/public/chat/fetch/${receiverId}`)
+    .then(r=>r.json())
+    .then(data=>{
+
+        let html = '';
+
+        data.forEach(m=>{
+            html += `
+            <div class="msg">
+                <b>${m.sender_id}</b>
+                ${m.message}
+            </div>`;
+        });
+
+        document.getElementById('chatBox').innerHTML = html;
+    });
+}
+
+function sendMessage()
+{
+    const msg = document.getElementById('messageInput').value;
+
+    fetch('/crm-hrms/public/chat/send',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            receiver_id:receiverId,
+            message:msg
+        })
+    })
+    .then(()=>{
+
+        document.getElementById('messageInput').value='';
+        loadMessages();
+
+    });
+}
+
+setInterval(loadMessages,2000);
+loadMessages();
+
+</script>
+
+<?php require '../app/views/layouts/footer.php'; ?>
