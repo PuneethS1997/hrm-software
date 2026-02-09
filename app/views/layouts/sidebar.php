@@ -91,8 +91,8 @@ $role = $user['role'] ?? '';
 
     <li class="chat">
       <a href="<?= BASE_URL ?>/chat/index">
-        <i class="bi bi-box-arrow-right"></i>
-        <span>Chat</span>
+      <i class="bi bi-chat-dots"></i>
+              <span>Chat</span>
       </a>
     </li>
 

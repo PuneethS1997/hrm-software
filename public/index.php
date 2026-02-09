@@ -224,6 +224,10 @@ switch ($route) {
                         case '/holiday/calendar':
                             (new LeaveController())->holidayCalendar();
                             break;
+
+                            case '/chat/index':
+                                (new ChatController())->index();
+                                break;
                         
 
                 
