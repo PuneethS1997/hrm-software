@@ -38,21 +38,7 @@ class Dashboard extends Database {
         ")->fetchColumn();
     }
 
-//     public function attendanceChart() {
 
-//     $stmt = $this->db->prepare("
-//         SELECT 
-//             DATE(date) as day,
-//             SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present_count
-//         FROM attendance
-//         WHERE date >= CURDATE() - INTERVAL 6 DAY
-//         GROUP BY DATE(date)
-//         ORDER BY day ASC
-//     ");
-
-//     $stmt->execute();
-//     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-//   }
 
 
     /* ================= EMPLOYEE ================= */
